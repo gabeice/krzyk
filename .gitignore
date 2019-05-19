@@ -3,3 +3,6 @@
 /*-init.clj
 /resources/public/js/compiled
 out
+.idea/
+.rebel_readline_history
+krzyk.iml
