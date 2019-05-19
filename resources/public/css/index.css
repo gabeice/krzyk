@@ -1,0 +1,90 @@
+body {
+  margin: 0px;
+  font-family: "Futura";
+  background-color: lightgray;
+}
+
+#body-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+@keyframes widen {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 30%;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+#underline {
+  height: 2px;
+  background-color: black;
+  width: 30%;
+  margin-bottom: 30px;
+  animation-duration: 4s;
+  animation-name: widen;
+  display: flex;
+  flex-direction: row;
+}
+
+#main {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  height: 500px;
+
+  animation-name: fadein;
+  animation-duration: 3s;
+}
+
+#outer-bar div {
+  border: none;
+  background: rgb(102, 561, 153);
+  width: 2px;
+}
+
+#display {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+#outer-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+#microphone {
+  align-self: center;
+  font-size: 10em;
+  cursor: pointer;
+}
+
+#microphone:hover {
+  color: red;
+}
