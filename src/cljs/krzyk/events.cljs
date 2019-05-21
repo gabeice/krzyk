@@ -28,8 +28,8 @@
 
 (reg-fx
   :render-frame
-  (fn [callback-fn]
-    (callback-fn)))
+  (fn [[analyzer frequency-data]]
+    (render-frame analyzer frequency-data)))
 
 (reg-event-fx
   ::show-frequency
@@ -41,11 +41,10 @@
   ::analyze-mic-input
   (fn [cofx [_ stream]]
     (let [analyzer (connect-mic stream)
-          frequency-data (js/Uint8Array. (.-frequencyBinCount analyzer))
-          render-frame #(render-frame analyzer frequency-data)]
+          frequency-data (js/Uint8Array. (.-frequencyBinCount analyzer))]
       (-> cofx
           (assoc-in [:db :frequency-data] frequency-data)
-          (assoc :render-frame render-frame
+          (assoc :render-frame [analyzer frequency-data]
                  :dispatch     [::show-frequency])))))
 
 (reg-fx

@@ -4,9 +4,7 @@
    [re-frame.core :as re-frame]
    [krzyk.events :as events]
    [krzyk.views :as views]
-   [krzyk.config :as config]
-   ))
-
+   [krzyk.config :as config]))
 
 (defn dev-setup []
   (when config/debug?
