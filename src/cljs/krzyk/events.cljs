@@ -3,6 +3,10 @@
    [re-frame.core :refer [reg-event-db reg-event-fx reg-fx dispatch]]
    [cljsjs.d3]))
 
+(defn calculate-rgb [n]
+  (let [adjusted-val (- 255 n)]
+    (str adjusted-val ", " adjusted-val ", " adjusted-val)))
+
 (defn- connect-mic [stream]
   (let [ctx (js/AudioContext.)
         analyzer (.createAnalyser ctx)
@@ -17,14 +21,17 @@
 (reg-fx
   :render-frequency-data
   (fn [frequency-data]
-    (aset (.getElementById js/document "outer-bar") "innerHTML" "")
-    (-> js/d3
-        (.select "#outer-bar")
-        (.selectAll "div")
-        (.data frequency-data)
-        (.enter)
-        (.append "div")
-        (.style "height" #(str (* % 3) "px")))))
+    (let [outer-bar (.getElementById js/document "outer-bar")
+          new-bar (.createElement js/document "div")]
+      (aset new-bar "className" "wave-slice")
+      (-> js/d3
+          (.select new-bar)
+          (.selectAll "div")
+          (.data (.reverse frequency-data))
+          (.enter)
+          (.append "div")
+          (.style "background-color" #(str "rgb(" (calculate-rgb %) ")")))
+      (.appendChild outer-bar new-bar))))
 
 (reg-fx
   :render-frame
