@@ -24,7 +24,7 @@
         (.data frequency-data)
         (.enter)
         (.append "div")
-        (.style "height" #(str (* % 2) "px")))))
+        (.style "height" #(str (* % 3) "px")))))
 
 (reg-fx
   :render-frame
@@ -35,7 +35,7 @@
   ::show-frequency
   (fn [cofx _]
     (assoc cofx :render-frequency-data (get-in cofx [:db :frequency-data])
-                :dispatch-later        [{:ms 100 :dispatch [::show-frequency]}])))
+                :dispatch-later        [{:ms 10 :dispatch [::show-frequency]}])))
 
 (reg-event-fx
   ::analyze-mic-input
@@ -56,7 +56,7 @@
 
 (reg-event-fx
   ::analyze
-  (fn [cofx [_]]
+  (fn [cofx _]
     (-> cofx
         (assoc-in [:db :listening?] true)
         (assoc :turn-on-mic nil))))
