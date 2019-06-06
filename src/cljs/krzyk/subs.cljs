@@ -3,6 +3,11 @@
    [re-frame.core :refer [reg-sub]]))
 
 (reg-sub
- ::listening?
+ ::on?
  (fn [db]
-   (:listening? db)))
+   (:on? db)))
+
+(reg-sub
+  ::listening?
+  (fn [db]
+    (:listening? db)))

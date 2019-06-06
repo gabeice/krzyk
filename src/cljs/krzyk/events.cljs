@@ -3,9 +3,9 @@
    [re-frame.core :refer [reg-event-db reg-event-fx reg-fx dispatch]]
    [cljsjs.d3]))
 
-(defn calculate-rgb [n]
-  (let [adjusted-val (- 255 n)]
-    (str adjusted-val ", " adjusted-val ", " adjusted-val)))
+(defn- set-rgb [val]
+  (let [adjusted-val (- 255 val)]
+    (str "rgb(" adjusted-val ", " adjusted-val ", " adjusted-val ")")))
 
 (defn- connect-mic [stream]
   (let [ctx (js/AudioContext.)
@@ -30,7 +30,7 @@
           (.data (.reverse frequency-data))
           (.enter)
           (.append "div")
-          (.style "background-color" #(str "rgb(" (calculate-rgb %) ")")))
+          (.style "background-color" #(set-rgb %)))
       (.appendChild outer-bar new-bar))))
 
 (reg-fx
@@ -41,8 +41,10 @@
 (reg-event-fx
   ::show-frequency
   (fn [cofx _]
-    (assoc cofx :render-frequency-data (get-in cofx [:db :frequency-data])
-                :dispatch-later        [{:ms 10 :dispatch [::show-frequency]}])))
+    (if (get-in cofx [:db :listening?])
+        (assoc cofx :render-frequency-data (get-in cofx [:db :frequency-data])
+                    :dispatch-later        [{:ms 10 :dispatch [::show-frequency]}])
+        cofx)))
 
 (reg-event-fx
   ::analyze-mic-input
@@ -65,8 +67,21 @@
   ::analyze
   (fn [cofx _]
     (-> cofx
+        (assoc :turn-on-mic nil
+               :db (assoc (:db cofx) :on? true
+                                     :listening? true)))))
+
+(reg-event-db
+  ::pause
+  (fn [db _]
+    (assoc db :listening? false)))
+
+(reg-event-fx
+  ::resume
+  (fn [cofx _]
+    (-> cofx
         (assoc-in [:db :listening?] true)
-        (assoc :turn-on-mic nil))))
+        (assoc :dispatch [::show-frequency]))))
 
 (reg-event-db
   ::initialize-db
